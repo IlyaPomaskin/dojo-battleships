@@ -24,10 +24,10 @@
    ^long framecount
    state]
   (set-background canvas :lightblue 200)
-  (render-board canvas (get-in state [:boards (:current-player state)]))
+  (render-board canvas (get-in state [(:current-player state) :board]))
   state)
 
-;; create canvas, display window and draw on canvas via draw function (60 fps)
+;; create canvas, display window and draw on canvas via draw function
 ;; show-window {:keys [canvas window-name w h fps draw-fn state draw-state setup hint refresher always-on-top? background]
 (def window (show-window {:canvas (canvas canvas-width canvas-height)
                           :window-name "Battleships"
@@ -35,15 +35,17 @@
                           :draw-fn draw
                           :setup (fn [canvas window]
                                    {:state :setup ; :game :game-over
-                                    :setup-ships-left ships
                                     :current-player :player-1
-                                    :boards {:player-1 [{:x 0 :y 0 :hit? false :ship? false}
-                                                        {:x 1 :y 0 :hit? false :ship? false}
-                                                        {:x 0 :y 1 :hit? false :ship? false}
-                                                        {:x 1 :y 1 :hit? false :ship? false}]
-                                             :player-2 [{:x 0 :y 0 :hit? false :ship? false}
-                                                        {:x 1 :y 0 :hit? false :ship? false}
-                                                        {:x 4 :y 0 :hit? false :ship? false}]}})}))
+                                    :player-1 {:setup-ships-left ships
+                                               :board [{:x 0 :y 0 :hit? false :ship? false}
+                                                       {:x 1 :y 0 :hit? false :ship? false}
+                                                       {:x 0 :y 1 :hit? false :ship? false}
+                                                       {:x 1 :y 1 :hit? false :ship? false}]}
+                                    :player-2 {:setup-ships-left ships
+                                               :board [{:x 0 :y 0 :hit? false :ship? false}
+                                                       {:x 1 :y 0 :hit? false :ship? false}
+                                                       {:x 4 :y 0 :hit? false :ship? false}] }
+                                    })}))
 
 (defn main []
   window)
