@@ -78,15 +78,20 @@
       :player-1)))
 
 (defn hit [coords state]
-  (->> state
-       (hit-cell coords)
-       (switch-player)))
+  (let [board (get-in state [(:current-player state) :board])
+        cell (first (filter #(can-be-hit? coords %1) board))]
+    (if (can-be-hit? coords cell)
+      (if (:ship? cell)
+        (hit-cell coords state)
+        (->> state
+             (hit-cell coords)
+             (switch-player)))
+      state)))
 
 (defmethod mouse-event [window-name :mouse-pressed] [event state]
   ;; do something when button is pressed
   (let [x (quot (.-x (.getPoint event)) field-size)
         y (quot (.-y (.getPoint event)) field-size)]
-    (println "x:" x "y:" y)
     (hit [x y] state)))
 
 (defn draw
@@ -106,7 +111,7 @@
 
 (def window (show-window {:canvas (canvas canvas-width canvas-height)
                           :window-name window-name
-                          :fps 1
+                          :fps 25
                           :draw-fn draw
                           :state {:state :game
                                   :current-player :player-1
