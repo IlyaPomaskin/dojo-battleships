@@ -104,6 +104,20 @@
              y (range 0 size)]
          {:x x :y y :hit? false :ship? false})))
 
+(defn extreme-coord [ship coord extreme-fn]
+  (apply extreme-fn (map coord ship)))
+(defn near-cells [ship]
+  (for [x (range (max 0 (dec (extreme-coord ship :x min))) (inc (min world-size (inc (extreme-coord ship :x max)))))
+        y (range (max 0 (dec (extreme-coord ship :y min))) (inc (min world-size (inc (extreme-coord ship :y max)))))]
+    {:x x :y y}))
+(defn get-cell [board cell]
+  (first (filter #(and (= (:x cell) (:x %)) (= (:y cell) (:y %)))
+                 board)))
+(defn cell-occupied? [board cell]
+  (true? (:ship? (get-cell board cell))))
+(defn ship-placement-is-valid? [board ship]
+  (not-any? (partial cell-occupied? board) (near-cells ship)))
+
 (def window (show-window {:canvas (canvas canvas-width canvas-height)
                           :window-name window-name
                           :fps 1
