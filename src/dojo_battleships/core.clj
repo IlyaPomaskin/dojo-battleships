@@ -6,8 +6,8 @@
 (def world-size 10)
 (def field-size 30)
 (def ships [5 4 4 3 3 2 2 2 1 1 1 1])
-(def canvas-width  800)
-(def canvas-height 600)
+(def canvas-width (* world-size field-size))
+(def canvas-height (* world-size field-size))
 
 (defn render-hit [canvas cell]
   (-> canvas
@@ -69,11 +69,9 @@
 
 (defn init-board [size]
   (vec (for [x (range 0 size)
-        y (range 0 size)]
-    {:x x :y y :hit? false :ship? false})))
+             y (range 0 size)]
+         {:x x :y y :hit? false :ship? false})))
 
-;; create canvas, display window and draw on canvas via draw function (60 fps)
-;; show-window {:keys [canvas window-name w h fps draw-fn state draw-state setup hint refresher always-on-top? background]
 (def window (show-window {:canvas (canvas canvas-width canvas-height)
                           :window-name window-name
                           :fps 25
