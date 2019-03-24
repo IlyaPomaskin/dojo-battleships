@@ -61,7 +61,12 @@
   (render-board canvas (get-in state [(:current-player state) :board]))
   state)
 
-;; create canvas, display window and draw on canvas via draw function
+(defn init-board [size]
+  (vec (for [x (range 0 size)
+        y (range 0 size)]
+    {:x x :y y :hit? false :ship? false})))
+
+;; create canvas, display window and draw on canvas via draw function (60 fps)
 ;; show-window {:keys [canvas window-name w h fps draw-fn state draw-state setup hint refresher always-on-top? background]
 (def window (show-window {:canvas (canvas canvas-width canvas-height)
                           :window-name "Battleships"
@@ -70,16 +75,10 @@
                           :setup (fn [canvas window]
                                    {:state :setup ; :game :game-over
                                     :current-player :player-1
-
                                     :player-1 {:setup-ships-left ships
-                                               :board [{:x 0 :y 0 :hit? false :ship? false}
-                                                       {:x 1 :y 0 :hit? false :ship? true}
-                                                       {:x 0 :y 1 :hit? true :ship? false}
-                                                       {:x 1 :y 1 :hit? true :ship? true}]}
+                                               :board (init-board world-size)}
                                     :player-2 {:setup-ships-left ships
-                                               :board [{:x 0 :y 0 :hit? false :ship? false}
-                                                       {:x 1 :y 0 :hit? false :ship? false}
-                                                       {:x 4 :y 0 :hit? false :ship? false}]}})}))
+                                               :board (init-board world-size)}})}))
 
 (defn main []
   window)
