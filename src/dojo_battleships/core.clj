@@ -2,6 +2,7 @@
   (:require [clojure2d.core :refer :all])
   (:gen-class))
 
+(def window-name "Battleships")
 (def world-size 10)
 (def field-size 30)
 (def ships [5 4 4 3 3 2 2 2 1 1 1 1])
@@ -52,6 +53,11 @@
             (render-fn canvas cell)))
         board))
 
+(defmethod mouse-event [window-name :mouse-pressed] [event state]
+  ;; do something when button is pressed
+  (println (.-x (.getPoint event)))
+  state)
+
 (defn draw
   [canvas
    window
@@ -69,7 +75,7 @@
 ;; create canvas, display window and draw on canvas via draw function (60 fps)
 ;; show-window {:keys [canvas window-name w h fps draw-fn state draw-state setup hint refresher always-on-top? background]
 (def window (show-window {:canvas (canvas canvas-width canvas-height)
-                          :window-name "Battleships"
+                          :window-name window-name
                           :fps 25
                           :draw-fn draw
                           :setup (fn [canvas window]
